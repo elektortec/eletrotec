@@ -1,244 +1,104 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Discussão - EletroTec</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8f9fa;
-      --text: #212529;
-      --primary: #007bff;
-      --card-bg: #ffffff;
-      --border: #dee2e6;
-      --accent: #28a745;
-      --danger: #dc3545;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 2rem 1rem;
-    }
-    .container { max-width: 900px; margin: 0 auto; }
-    .back {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .back:hover { text-decoration: underline; }
-    header h1 {
-      font-size: 2.2rem;
-      color: var(--primary);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .forum-info {
-      text-align: center;
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 2rem;
-    }
-    .threads { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 3rem; }
-    .thread {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .thread:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .thread-info h3 {
-      font-size: 1.1rem;
-      color: var(--primary);
-      margin-bottom: 0.3rem;
-    }
-    .thread-info p { font-size: 0.9rem; color: #666; }
-    .thread-meta { text-align: right; font-size: 0.85rem; color: #888; }
-
-    /* Formulário */
-    .new-thread-form {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.8rem;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    .new-thread-form h2 {
-      font-size: 1.4rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: #333;
-    }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 0.8rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    .btn {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .btn:hover { background: #218838; }
-    .success, .error {
-      padding: 1rem;
-      border-radius: 6px;
-      margin-top: 1rem;
-      text-align: center;
-      display: none;
-    }
-    .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-    footer {
-      text-align: center;
-      margin-top: 4rem;
-      color: #888;
-      font-size: 0.9rem;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <a href="index.html" class="back">← Voltar à Home</a>
-    <header>
-      <h1>Discussão Técnica</h1>
-      <p>Crie tópicos, tire dúvidas e compartilhe conhecimento com a comunidade.</p>
-    </header>
-
-    <div class="forum-info">
-      <p><strong id="discussion-count">Carregando...</strong> tópicos • <strong id="comment-count">0</strong> respostas</p>
+<!-- Formulário para novo tópico (parte do body, substitua o antigo) -->
+<div class="new-thread-form">
+  <h2>Criar Novo Tópico</h2>
+  <button id="login-github" class="btn" style="background: #24292e; margin-bottom: 1rem;">Login com GitHub para Postar</button>
+  <form id="new-discussion-form" style="display: none;">
+    <div class="form-group">
+      <label for="title">Título do Tópico *</label>
+      <input type="text" id="title" name="title" required placeholder="Ex: Problema com multímetro" />
     </div>
-
-    <div id="discussions-list" class="threads">
-      <!-- Tópicos carregados via JavaScript -->
+    <div class="form-group">
+      <label for="body">Descrição *</label>
+      <textarea id="body" name="body" required placeholder="Explique sua dúvida..."></textarea>
     </div>
-
-    <!-- Formulário para novo tópico -->
-    <div class="new-thread-form">
-      <h2>Criar Novo Tópico</h2>
-      <form id="new-discussion-form" action="https://formspree.io/f/SEU_FORMSPREE_ID" method="POST">
-        <div class="form-group">
-          <label for="title">Título do Tópico *</label>
-          <input type="text" id="title" name="title" required placeholder="Ex: ESP32 não conecta ao WiFi" />
-        </div>
-        <div class="form-group">
-          <label for="body">Descreva sua dúvida ou projeto *</label>
-          <textarea id="body" name="body" required placeholder="Explique o problema, inclua código, esquema ou foto se possível..."></textarea>
-        </div>
-        <div class="form-group">
-          <label for="category">Categoria</label>
-          <select id="category" name="category">
-            <option value="general">Dúvidas Gerais</option>
-            <option value="projects">Projetos e Esquemas</option>
-            <option value="suggestions">Sugestões</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="email">Seu e-mail (opcional, para resposta)</label>
-          <input type="email" id="email" name="_replyto" placeholder="seu@email.com" />
-        </div>
-        <button type="submit" class="btn">Publicar Tópico</button>
-      </form>
-      <div id="form-message" class="success">Tópico enviado! Aguarde moderação no GitHub Discussions.</div>
-      <div id="form-error" class="error">Erro ao enviar. Tente novamente.</div>
+    <div class="form-group">
+      <label for="category">Categoria</label>
+      <select id="category" name="category">
+        <option value="general">Dúvidas Gerais</option>
+        <option value="projects">Projetos e Esquemas</option>
+        <option value="suggestions">Sugestões</option>
+      </select>
     </div>
+    <button type="submit" class="btn">Publicar Tópico no Fórum</button>
+  </form>
+  <div id="form-message" class="success" style="display: none;">Tópico criado com sucesso! <a href="https://github.com/elektortec/eletrotec/discussions" target="_blank">Ver no Fórum</a></div>
+  <div id="form-error" class="error" style="display: none;">Erro: Tente logar novamente.</div>
+</div>
 
-    <footer>
-      <p>© 2025 EletroTec • Fórum via GitHub Discussions</p>
-    </footer>
-  </div>
+<!-- Script atualizado (substitua o antigo script) -->
+<script>
+  const repo = "elektortec/eletrotec"; // Seu repo
+  const CLIENT_ID = "SEU_CLIENT_ID_AQUI"; // MUDE pelo seu Client ID
+  const CLIENT_SECRET = "SEU_CLIENT_SECRET_AQUI"; // MUDE (mantenha secreto!)
+  const form = document.getElementById("new-discussion-form");
+  const loginBtn = document.getElementById("login-github");
+  const success = document.getElementById("form-message");
+  const error = document.getElementById("form-error");
+  let accessToken = localStorage.getItem("github_token"); // Armazena token no browser
 
-  <!-- Script para carregar Discussions do GitHub -->
-  <script>
-    const repo = "eletrotec/eletrotec.github.io"; // Seu repo configurado!
-    const formspreeId = "SEU_FORMSPREE_ID"; // MUDE AQUI pelo ID do Formspree (crie em formspree.io se não tem)
+  // Login com GitHub
+  loginBtn.addEventListener("click", () => {
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&scope=write:discussion`;
+  });
 
-    // Atualiza o endpoint do formulário
-    document.getElementById("new-discussion-form").action = `https://formspree.io/f/${formspreeId}`;
+  // Verifica token após login (GitHub redireciona com code)
+  if (window.location.search.includes("code")) {
+    const code = new URLSearchParams(window.location.search).get("code");
+    fetch(`https://github.com/login/oauth/access_token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=${code}`, {
+      method: "POST",
+      headers: { Accept: "application/json" }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.access_token) {
+        accessToken = data.access_token;
+        localStorage.setItem("github_token", accessToken);
+        form.style.display = "block";
+        loginBtn.style.display = "none";
+        history.replaceState(null, null, window.location.pathname); // Limpa URL
+      }
+    })
+    .catch(() => error.style.display = "block");
+  }
 
-    // Carrega Discussions
-    fetch(`https://api.github.com/repos/${repo}/discussions?state=open`)
-      .then(r => r.json())
-      .then(discussions => {
-        const list = document.getElementById("discussions-list");
-        const count = document.getElementById("discussion-count");
-        count.textContent = discussions.length;
+  if (accessToken) {
+    form.style.display = "block";
+    loginBtn.style.display = "none";
+  }
 
-        if (discussions.length === 0) {
-          list.innerHTML = `<p style="text-align:center; color:#666; padding:2rem;">Nenhum tópico ainda. Seja o primeiro! 🚀</p>`;
-          return;
-        }
+  // Envia para Discussions
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = document.getElementById("title").value;
+    const body = document.getElementById("body").value;
+    const category = document.getElementById("category").value;
 
-        discussions.forEach(discussion => {
-          const date = new Date(discussion.created_at).toLocaleDateString('pt-BR');
-          const thread = document.createElement('div');
-          thread.className = 'thread';
-          thread.innerHTML = `
-            <div class="thread-info">
-              <h3><a href="${discussion.html_url}" target="_blank" style="color:var(--primary); text-decoration:none;">${discussion.title}</a></h3>
-              <p>Por ${discussion.author.login} • ${date} • Categoria: ${discussion.category ? discussion.category.name : 'Geral'}</p>
-            </div>
-            <div class="thread-meta">
-              ${discussion.answer_html ? 'Resolvido' : discussion.reactions.plus_one.total_count} 👍<br>
-              ${discussion.comments_count} respostas
-            </div>
-          `;
-          list.appendChild(thread);
-        });
+    fetch(`https://api.github.com/repos/${repo}/discussions`, {
+      method: "POST",
+      headers: {
+        Authorization: `token ${accessToken}`,
+        Accept: "application/vnd.github.v3+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        title: title,
+        body: body,
+        category: category === "general" ? "general-discussion" : category // Ajuste se necessário
       })
-      .catch(() => {
-        document.getElementById("discussions-list").innerHTML = `<p style="color:#dc3545; text-align:center;">Erro ao carregar tópicos. Verifique se Discussions está ativado.</p>`;
-      });
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.id) {
+        success.style.display = "block";
+        form.reset();
+        // Recarrega lista de tópicos (chame a função de load aqui se quiser)
+      } else {
+        error.style.display = "block";
+      }
+    })
+    .catch(() => error.style.display = "block");
+  });
 
-    // Feedback do formulário (Formspree)
-    const form = document.getElementById("new-discussion-form");
-    const success = document.getElementById("form-message");
-    const error = document.getElementById("form-error");
-
-    form.addEventListener("submit", function(e) {
-      success.style.display = "none";
-      error.style.display = "none";
-    });
-
-    if (window.location.search.includes("success")) {
-      success.style.display = "block";
-      form.reset();
-    } else if (window.location.search.includes("error")) {
-      error.style.display = "block";
-    }
-  </script>
-</body>
-</html>
+  // Carregamento de tópicos (mesmo de antes, adicione se quiser)
+  // ... (cole o fetch de discussions aqui)
+</script>
