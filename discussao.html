@@ -231,7 +231,6 @@
     const success = document.getElementById("form-message");
     const error = document.getElementById("form-error");
 
-    // NOME FIXO DO TOKEN
     const TOKEN_KEY = "gh_token_eletrotec";
     let accessToken = localStorage.getItem(TOKEN_KEY);
     let currentUser = null;
@@ -248,7 +247,8 @@
         userInfo.innerHTML = `Logado como <strong>@${user.login}</strong>`;
         userInfo.style.display = "block";
       } catch (e) {
-        console.error("Erro ao carregar usuário", e);
+        console.error("Token inválido", e);
+        logout();
       }
     }
 
@@ -259,7 +259,7 @@
     });
 
     // Logout
-    logoutBtn.addEventListener("click", () => {
+    function logout() {
       localStorage.removeItem(TOKEN_KEY);
       accessToken = null;
       currentUser = null;
@@ -267,12 +267,13 @@
       form.style.display = "none";
       userInfo.style.display = "none";
       window.location.reload();
-    });
+    }
+    logoutBtn.addEventListener("click", logout);
 
     // Troca code por token
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-    if (code && !accessToken) {
+    if (code) {
       const tokenUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://github.com/login/oauth/access_token')}`;
       fetch(tokenUrl, {
         method: "POST",
@@ -290,7 +291,7 @@
           accessToken = response.access_token;
           localStorage.setItem(TOKEN_KEY, accessToken);
           window.history.replaceState({}, document.title, window.location.pathname);
-          initApp();
+          startApp(); // Inicia app após login
         } else {
           error.textContent = "Falha no login. Tente novamente.";
           error.style.display = "block";
@@ -301,11 +302,11 @@
         error.style.display = "block";
       });
     } else if (accessToken) {
-      initApp();
+      startApp(); // Inicia app se já estiver logado
     }
 
-    // Inicializa app se logado
-    async function initApp() {
+    // Inicializa app (login ou recarregamento)
+    async function startApp() {
       loginRequired.style.display = "none";
       form.style.display = "block";
       await showUser();
@@ -391,7 +392,7 @@
         });
     }
 
-    // Carrega discussões mesmo sem login
+    // Sempre carrega discussões
     loadDiscussions();
   </script>
 </body>
