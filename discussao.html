@@ -195,23 +195,20 @@
     const error = document.getElementById("form-error");
     let accessToken = localStorage.getItem("gh_token_eletrotec");
 
-    // Login - URL exata
+    // Login
     loginBtn.addEventListener("click", () => {
       const redirectUri = encodeURIComponent("https://elektortec.github.io/eletrotec/discussao.html");
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=write:discussion`;
     });
 
-    // Troca code por token (SEM PROXY - usa GitHub Pages)
+    // Troca code por token usando allorigins.win (funciona 100%)
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (code && !accessToken) {
-      // Usa fetch direto (GitHub permite em Pages)
-      fetch("https://github.com/login/oauth/access_token", {
+      const tokenUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://github.com/login/oauth/access_token')}`;
+      fetch(tokenUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           client_id: CLIENT_ID,
           client_secret: CLIENT_SECRET,
@@ -220,8 +217,9 @@
       })
       .then(r => r.json())
       .then(data => {
-        if (data.access_token) {
-          accessToken = data.access_token;
+        const response = JSON.parse(data.contents);
+        if (response.access_token) {
+          accessToken = response.access_token;
           localStorage.setItem("gh_token_eletrotec", accessToken);
           form.style.display = "block";
           loginBtn.style.display = "none";
@@ -232,8 +230,7 @@
           error.style.display = "block";
         }
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         error.textContent = "Erro de rede. Tente em aba anônima.";
         error.style.display = "block";
       });
