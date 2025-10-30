@@ -138,7 +138,7 @@
 </head>
 <body>
   <div class="container">
-    <a href="index.html" class="back">← Voltar à Home</a>
+    <a href="index.html" class="back">Voltar à Home</a>
     <header>
       <h1>Discussão Técnica</h1>
       <p>Crie tópicos diretamente no GitHub Discussions. Login necessário.</p>
@@ -186,8 +186,8 @@
 
   <script>
     const repo = "elektortec/eletrotec";
-    const CLIENT_ID = "Iv1.1234567890abcdef"; // ← Substitua pelo seu Client ID (ex: Iv1.xxx)
-    const CLIENT_SECRET = "802b15cf7f2d0b8009ebfecf6704373651323651"; // ← Sua chave (OK por enquanto)
+    const CLIENT_ID = "Ov23liN3mk15RCvqFJoq"; // SEU CLIENT ID
+    const CLIENT_SECRET = "802b15cf7f2d0b8009ebfecf6704373651323651"; // SEU CLIENT SECRET
 
     const form = document.getElementById("new-discussion-form");
     const loginBtn = document.getElementById("login-github");
@@ -201,7 +201,7 @@
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=write:discussion`;
     });
 
-    // Captura code e troca por token (com CORS proxy)
+    // Captura code e troca por token
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (code && !accessToken) {
@@ -224,7 +224,7 @@
           window.history.replaceState({}, document.title, window.location.pathname);
           loadDiscussions();
         } else {
-          error.textContent = "Falha no login. Verifique o Client ID.";
+          error.textContent = "Falha no login. Verifique as chaves.";
           error.style.display = "block";
         }
       })
