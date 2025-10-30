@@ -73,13 +73,12 @@
       padding: 1.8rem;
       max-width: 700px;
       margin: 0 auto;
+      text-align: center;
     }
     .new-thread-form h2 {
       font-size: 1.4rem;
       color: var(--primary);
-      margin-bottom:
-
- 1rem;
+      margin-bottom: 1rem;
       text-align: center;
     }
     .form-group {
@@ -112,18 +111,18 @@
       font-weight: 600;
       cursor: pointer;
       font-size: 1rem;
-      margin-right: 0.5rem;
+      margin: 0.5rem;
     }
     .btn:hover { background: #218838; }
     .btn-github {
       background: var(--github);
-      margin-bottom: 1rem;
+      display: inline-block;
+      width: auto;
+      padding: 0.9rem 1.8rem;
+      font-size: 1.1rem;
     }
     .btn-github:hover { background: #1a1e22; }
     .success, .error {
-      padding: 1rem;
-      border-radius: 6px;
-      margin-top, .error {
       padding: 1rem;
       border-radius: 6px;
       margin-top: 1rem;
@@ -132,6 +131,21 @@
     }
     .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    .login-prompt {
+      background: #e7f3ff;
+      border: 1px solid #bee5eb;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin: 2rem auto;
+      max-width: 700px;
+      text-align: center;
+      color: #0c5460;
+    }
+    .login-prompt p {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
 
     footer {
       text-align: center;
@@ -146,29 +160,33 @@
     <a href="index.html" class="back">Voltar à Home</a>
     <header>
       <h1>Discussão Técnica</h1>
-      <p>Crie tópicos diretamente no GitHub Discussions. Login necessário.</p>
+      <p>Compartilhe dúvidas, projetos e ideias com a comunidade.</p>
     </header>
 
     <div class="forum-info">
-      <p><strong id="discussion-count">Carregando...</strong> tópicos</p>
+      <p><strong id="discussion-count">Carregando...</strong> tópicos ativos</p>
     </div>
 
     <div id="discussions-list" class="threads">
       <!-- Tópicos carregados via JS -->
     </div>
 
-    <!-- Formulário com login GitHub -->
+    <!-- Área de criação de tópico -->
     <div class="new-thread-form">
-      <h2>Criar Novo Tópico</h2>
-      <button id="login-github" class="btn btn-github">Login com GitHub</button>
+      <div id="login-required" class="login-prompt">
+        <p>Faça login com GitHub para criar um novo tópico</p>
+        <button id="login-github" class="btn btn-github">Login com GitHub</button>
+      </div>
+
       <form id="new-discussion-form" style="display: none;">
+        <h2>Criar Novo Tópico</h2>
         <div class="form-group">
           <label for="title">Título *</label>
-          <input type="text" id="title" required placeholder="Ex: Como testar capacitor com multímetro?" />
+          <input type="text" id="title" required placeholder="Ex: Problema com multímetro na bancada" />
         </div>
         <div class="form-group">
           <label for="body">Descrição *</label>
-          <textarea id="body" required placeholder="Explique o problema, inclua fotos ou código..."></textarea>
+          <textarea id="body" required placeholder="Explique sua dúvida, inclua fotos, esquemas ou código..."></textarea>
         </div>
         <div class="form-group">
           <label for="category">Categoria</label>
@@ -179,14 +197,15 @@
             <option value="Show and tell">Projetos e Esquemas</option>
           </select>
         </div>
-        <button type="submit" class="btn">Publicar no Fórum</button>
+        <button type="submit" class="btn">Publicar Tópico</button>
       </form>
-      <div id="form-message" class="success">Tópico criado! <a href="https://github.com/elektortec/eletrotec/discussions" target="_blank">Ver agora</a></div>
+
+      <div id="form-message" class="success">Tópico criado com sucesso! <a href="https://github.com/elektortec/eletrotec/discussions" target="_blank">Ver no GitHub</a></div>
       <div id="form-error" class="error">Erro. Tente novamente.</div>
     </div>
 
     <footer>
-      <p>© 2025 EletroTec • Fórum 100% GitHub</p>
+      <p>© 2025 EletroTec • Fórum via GitHub Discussions</p>
     </footer>
   </div>
 
@@ -196,6 +215,7 @@
     const CLIENT_SECRET = "802b15cf7f2d0b8009ebfecf6704373651323651";
 
     const form = document.getElementById("new-discussion-form");
+    const loginRequired = document.getElementById("login-required");
     const loginBtn = document.getElementById("login-github");
     const success = document.getElementById("form-message");
     const error = document.getElementById("form-error");
@@ -227,28 +247,25 @@
         if (response.access_token) {
           accessToken = response.access_token;
           localStorage.setItem("gh_token_eletrotec", accessToken);
+          loginRequired.style.display = "none";
           form.style.display = "block";
-          loginBtn.style.display = "none";
           window.history.replaceState({}, document.title, "/eletrotec/discussao.html");
           loadDiscussions();
-        } else {
-          error.textContent = "Falha no login. Verifique as chaves.";
-          error.style.display = "block";
         }
       })
       .catch(() => {
-        error.textContent = "Erro de rede. Tente em aba anônima.";
+        error.textContent = "Erro ao fazer login. Tente novamente.";
         error.style.display = "block";
       });
     }
 
     if (accessToken) {
+      loginRequired.style.display = "none";
       form.style.display = "block";
-      loginBtn.style.display = "none";
       loadDiscussions();
     }
 
-    // Envia discussão
+    // Envia tópico
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const title = document.getElementById("title").value.trim();
@@ -264,11 +281,7 @@
       try {
         const categories = await fetch(`https://api.github.com/repos/${repo}/discussions/categories`).then(r => r.json());
         const category = categories.find(c => c.name === categoryName);
-        if (!category) {
-          error.textContent = `Categoria "${categoryName}" não encontrada.`;
-          error.style.display = "block";
-          return;
-        }
+        if (!category) throw new Error(`Categoria "${categoryName}" não existe.`);
 
         const res = await fetch(`https://api.github.com/repos/${repo}/discussions`, {
           method: "POST",
@@ -286,7 +299,7 @@
           form.reset();
           loadDiscussions();
         } else {
-          throw new Error(data.message || "Erro ao criar");
+          throw new Error(data.message || "Erro ao criar tópico");
         }
       } catch (err) {
         error.textContent = err.message;
@@ -305,7 +318,7 @@
 
           list.innerHTML = "";
           if (discussions.length === 0) {
-            list.innerHTML = `<p style="text-align:center; color:#666;">Nenhum tópico. Crie o primeiro!</p>`;
+            list.innerHTML = `<p style="text-align:center; color:#666; padding:2rem;">Nenhum tópico ainda. <br>Seja o primeiro a criar!</p>`;
             return;
           }
 
@@ -319,7 +332,7 @@
                 <p>Por ${d.user.login} • ${date} • ${d.category.name}</p>
               </div>
               <div class="thread-meta">
-                ${d.reactions ? d.reactions["+1"] : 0} Positive<br>
+                ${d.reactions?.["+1"] || 0} Positive<br>
                 ${d.comments} respostas
               </div>
             `;
