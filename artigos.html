@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artigos - EletroTec</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --text: #212529;
+      --primary: #007bff;
+      --card-bg: #ffffff;
+      --border: #dee2e6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    .back {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back:hover { text-decoration: underline; }
+    header h1 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .article-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .article {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: transform 0.2s;
+    }
+    .article:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    }
+    .article h3 {
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .article .meta {
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 0.8rem;
+    }
+    .article p {
+      font-size: 1rem;
+      color: #444;
+    }
+    .read-more {
+      display: inline-block;
+      margin-top: 0.8rem;
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .read-more:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back">← Voltar à Home</a>
+    <header>
+      <h1>Artigos Técnicos</h1>
+      <p>Guias completos, tutoriais e análises profundas sobre eletrônica e tecnologia.</p>
+    </header>
+
+    <div class="article-list">
+      <div class="article">
+        <h3>Como Escolher o Microcontrolador Ideal para Seu Projeto</h3>
+        <div class="meta">Por João Silva • 28 Out 2025 • 12 min de leitura</div>
+        <p>Comparativo entre Arduino, ESP32, STM32 e PIC: consumo, GPIO, WiFi, preço e aplicações reais.</p>
+        <a href="#" class="read-more">Ler artigo →</a>
+      </div>
+
+      <div class="article">
+        <h3>Entendendo MOSFETs: Do Básico ao Avançado</h3>
+        <div class="meta">Por Ana Costa • 25 Out 2025 • 15 min de leitura</div>
+        <p>Curva característica, driver de gate, perdas por comutação e uso em fontes chaveadas.</p>
+        <a href="#" class="read-more">Ler artigo →</a>
+      </div>
+
+      <div class="article">
+        <h3>Construindo um Osciloscópio com Arduino e TFT</h3>
+        <div class="meta">Por Pedro Lima • 20 Out 2025 • 8 min de leitura</div>
+        <p>Projeto completo com código, esquema e calibração de 100kHz de largura de banda.</p>
+        <a href="#" class="read-more">Ler artigo →</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2025 EletroTec • Conteúdo técnico revisado por especialistas.</p>
+    </footer>
+  </div>
+</body>
+</html>
