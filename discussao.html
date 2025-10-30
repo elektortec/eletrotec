@@ -77,7 +77,9 @@
     .new-thread-form h2 {
       font-size: 1.4rem;
       color: var(--primary);
-      margin-bottom: 1rem;
+      margin-bottom:
+
+ 1rem;
       text-align: center;
     }
     .form-group {
@@ -119,6 +121,9 @@
     }
     .btn-github:hover { background: #1a1e22; }
     .success, .error {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top, .error {
       padding: 1rem;
       border-radius: 6px;
       margin-top: 1rem;
@@ -168,9 +173,10 @@
         <div class="form-group">
           <label for="category">Categoria</label>
           <select id="category">
-            <option value="Dúvidas Gerais">Dúvidas Gerais</option>
-            <option value="Projetos e Esquemas">Projetos e Esquemas</option>
-            <option value="Sugestões">Sugestões</option>
+            <option value="General">Dúvidas Gerais</option>
+            <option value="Q&A">Perguntas e Respostas</option>
+            <option value="Ideas">Sugestões</option>
+            <option value="Show and tell">Projetos e Esquemas</option>
           </select>
         </div>
         <button type="submit" class="btn">Publicar no Fórum</button>
@@ -201,7 +207,7 @@
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=write:discussion`;
     });
 
-    // Troca code por token usando allorigins.win (funciona 100%)
+    // Troca code por token
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
     if (code && !accessToken) {
@@ -245,14 +251,24 @@
     // Envia discussão
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const title = document.getElementById("title").value;
-      const body = document.getElementById("body").value;
+      const title = document.getElementById("title").value.trim();
+      const body = document.getElementById("body").value.trim();
       const categoryName = document.getElementById("category").value;
+
+      if (!title || !body) {
+        error.textContent = "Preencha título e descrição.";
+        error.style.display = "block";
+        return;
+      }
 
       try {
         const categories = await fetch(`https://api.github.com/repos/${repo}/discussions/categories`).then(r => r.json());
         const category = categories.find(c => c.name === categoryName);
-        if (!category) throw new Error("Categoria não encontrada");
+        if (!category) {
+          error.textContent = `Categoria "${categoryName}" não encontrada.`;
+          error.style.display = "block";
+          return;
+        }
 
         const res = await fetch(`https://api.github.com/repos/${repo}/discussions`, {
           method: "POST",
