@@ -79,7 +79,6 @@
       font-size: 1.4rem;
       color: var(--primary);
       margin-bottom: 1rem;
-      text-align: center;
     }
     .form-group {
       margin-bottom: 1rem;
@@ -147,6 +146,13 @@
       font-size: 1.1rem;
     }
 
+    .user-info {
+      text-align: right;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
     footer {
       text-align: center;
       margin-top: 4rem;
@@ -173,6 +179,8 @@
 
     <!-- Área de criação de tópico -->
     <div class="new-thread-form">
+      <div id="user-info" class="user-info" style="display: none;"></div>
+
       <div id="login-required" class="login-prompt">
         <p>Faça login com GitHub para criar um novo tópico</p>
         <button id="login-github" class="btn btn-github">Login com GitHub</button>
@@ -198,6 +206,7 @@
           </select>
         </div>
         <button type="submit" class="btn">Publicar Tópico</button>
+        <button type="button" id="logout" class="btn" style="background: #dc3545;">Sair</button>
       </form>
 
       <div id="form-message" class="success">Tópico criado com sucesso! <a href="https://github.com/elektortec/eletrotec/discussions" target="_blank">Ver no GitHub</a></div>
@@ -217,14 +226,47 @@
     const form = document.getElementById("new-discussion-form");
     const loginRequired = document.getElementById("login-required");
     const loginBtn = document.getElementById("login-github");
+    const userInfo = document.getElementById("user-info");
+    const logoutBtn = document.getElementById("logout");
     const success = document.getElementById("form-message");
     const error = document.getElementById("form-error");
-    let accessToken = localStorage.getItem("gh_token_eletrotec");
+
+    // NOME FIXO DO TOKEN
+    const TOKEN_KEY = "gh_token_eletrotec";
+    let accessToken = localStorage.getItem(TOKEN_KEY);
+    let currentUser = null;
+
+    // Mostra usuário logado
+    async function showUser() {
+      if (!accessToken) return;
+      try {
+        const res = await fetch("https://api.github.com/user", {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        });
+        const user = await res.json();
+        currentUser = user.login;
+        userInfo.innerHTML = `Logado como <strong>@${user.login}</strong>`;
+        userInfo.style.display = "block";
+      } catch (e) {
+        console.error("Erro ao carregar usuário", e);
+      }
+    }
 
     // Login
     loginBtn.addEventListener("click", () => {
       const redirectUri = encodeURIComponent("https://elektortec.github.io/eletrotec/discussao.html");
       window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=write:discussion`;
+    });
+
+    // Logout
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem(TOKEN_KEY);
+      accessToken = null;
+      currentUser = null;
+      loginRequired.style.display = "block";
+      form.style.display = "none";
+      userInfo.style.display = "none";
+      window.location.reload();
     });
 
     // Troca code por token
@@ -246,22 +288,27 @@
         const response = JSON.parse(data.contents);
         if (response.access_token) {
           accessToken = response.access_token;
-          localStorage.setItem("gh_token_eletrotec", accessToken);
-          loginRequired.style.display = "none";
-          form.style.display = "block";
-          window.history.replaceState({}, document.title, "/eletrotec/discussao.html");
-          loadDiscussions();
+          localStorage.setItem(TOKEN_KEY, accessToken);
+          window.history.replaceState({}, document.title, window.location.pathname);
+          initApp();
+        } else {
+          error.textContent = "Falha no login. Tente novamente.";
+          error.style.display = "block";
         }
       })
       .catch(() => {
-        error.textContent = "Erro ao fazer login. Tente novamente.";
+        error.textContent = "Erro de rede. Tente em aba anônima.";
         error.style.display = "block";
       });
+    } else if (accessToken) {
+      initApp();
     }
 
-    if (accessToken) {
+    // Inicializa app se logado
+    async function initApp() {
       loginRequired.style.display = "none";
       form.style.display = "block";
+      await showUser();
       loadDiscussions();
     }
 
@@ -344,6 +391,7 @@
         });
     }
 
+    // Carrega discussões mesmo sem login
     loadDiscussions();
   </script>
 </body>
