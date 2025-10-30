@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EletroTec - Eletrônica & Tecnologia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --text: #212529;
+      --primary: #007bff;
+      --card-bg: #ffffff;
+      --border: #dee2e6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 280px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 2rem; }
+      .card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>EletroTec</h1>
+      <p>Bem-vindo à sua referência em eletrônica, circuitos e tecnologia. Explore esquemas, artigos técnicos e participe da discussão com a comunidade.</p>
+    </header>
+
+    <div class="cards">
+      <!-- Card 1: Esquemas -->
+      <a href="esquemas.html" class="card">
+        <span class="icon">⚡</span>
+        <h3>Esquemas Elétricos</h3>
+        <p>Diagramas completos, projetos práticos e circuitos para iniciantes e avançados.</p>
+      </a>
+
+      <!-- Card 2: Artigos Técnicos -->
+      <a href="artigos.html" class="card">
+        <span class="icon">📄</span>
+        <h3>Artigos Técnicos</h3>
+        <p>Tutoriais, análises e guias aprofundados sobre eletrônica, Arduino, ESP32 e mais.</p>
+      </a>
+
+      <!-- Card 3: Discussão Técnica -->
+      <a href="discussao.html" class="card">
+        <span class="icon">💬</span>
+        <h3>Discussão Técnica</h3>
+        <p>Participe do fórum: tire dúvidas, compartilhe projetos e aprenda com a comunidade.</p>
+      </a>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 EletroTec • Feito com ❤️ para entusiastas da eletrônica</p>
+    </footer>
+  </div>
+</body>
+</html>
