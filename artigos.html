@@ -1,121 +1,199 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Artigos - EletroTec</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Artigos técnicos sobre eletrônica, transceptores, antenas, fontes e SDR.">
+  <title>Artigos Técnicos - EletroTec</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
-      --bg: #f8f9fa;
-      --text: #212529;
-      --primary: #007bff;
-      --card-bg: #ffffff;
-      --border: #dee2e6;
+      --bg: #f8f9fa; --text: #212529; --primary: #007bff; --card-bg: #ffffff; --border: #dee2e6;
+      --shadow: 0 8px 16px rgba(0,0,0,0.06); --radius: 10px;
+    }
+    [data-theme="dark"] {
+      --bg: #1a1a1a; --text: #e9ecef; --card-bg: #2d2d2d; --border: #444; --shadow: 0 8px 16px rgba(0,0,0,0.3);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      padding: 2rem 1rem;
-    }
-    .container { max-width: 800px; margin: 0 auto; }
-    .back {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; padding: 2rem 1rem; transition: background 0.3s; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .back { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary); text-decoration: none; font-weight: 600; margin-bottom: 1.5rem; }
     .back:hover { text-decoration: underline; }
-    header h1 {
-      font-size: 2.2rem;
-      color: var(--primary);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .article-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .article {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      transition: transform 0.2s;
-    }
-    .article:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.06);
-    }
-    .article h3 {
-      font-size: 1.3rem;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    .article .meta {
-      font-size: 0.85rem;
-      color: #777;
-      margin-bottom: 0.8rem;
-    }
-    .article p {
-      font-size: 1rem;
-      color: #444;
-    }
-    .read-more {
-      display: inline-block;
-      margin-top: 0.8rem;
-      color: var(--primary);
-      font-weight: 600;
-      text-decoration: none;
-    }
+    header h1 { font-size: 2.2rem; color: var(--primary); text-align: center; margin: 1.5rem 0 0.5rem; }
+    header p { text-align: center; color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem; }
+
+    .search-container { margin-bottom: 2rem; position: relative; }
+    .search-box { width: 100%; padding: 0.8rem 1rem 0.8rem 2.5rem; border: 1px solid var(--border); border-radius: var(--radius); font-size: 1rem; background: var(--card-bg); color: var(--text); }
+    .search-box:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,123,255,0.15); }
+    .search-icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #777; }
+
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; }
+    .filter-btn { padding: 0.4rem 0.8rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+    .filter-btn.active, .filter-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    .article-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .article { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; }
+    .article:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .article-img { width: 100%; height: 180px; object-fit: cover; }
+    .article-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+    .article h3 { font-size: 1.3rem; color: var(--primary); margin-bottom: 0.5rem; line-height: 1.4; }
+    .article .meta { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #777; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .meta i { color: #aaa; }
+    .article p { font-size: 1rem; color: #555; margin-bottom: 1rem; flex-grow: 1; }
+    .read-more { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--primary); font-weight: 600; text-decoration: none; margin-top: auto; }
     .read-more:hover { text-decoration: underline; }
-    footer {
-      text-align: center;
-      margin-top: 4rem;
-      color: #888;
-      font-size: 0.9rem;
-    }
+
+    .pagination { display: flex; justify-content: center; gap: 0.5rem; margin: 3rem 0 2rem; }
+    .page-btn { padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    .page-btn.active, .page-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    footer { text-align: center; margin-top: 4rem; color: #888; font-size: 0.9rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    @media (max-width: 640px) { header h1 { font-size: 1.8rem; } .article-img { height: 140px; } }
   </style>
 </head>
 <body>
   <div class="container">
-    <a href="index.html" class="back">← Voltar à Home</a>
+    <a href="index.html" class="back">Voltar à Home</a>
+
     <header>
       <h1>Artigos Técnicos</h1>
-      <p>Guias completos, tutoriais e análises profundas sobre eletrônica e tecnologia.</p>
+      <p>Guias completos, tutoriais e análises profundas sobre eletrônica e radioamadorismo.</p>
     </header>
 
-    <div class="article-list">
-      <div class="article">
-        <h3>Como Escolher o Microcontrolador Ideal para Seu Projeto</h3>
-        <div class="meta">Por João Silva • 28 Out 2025 • 12 min de leitura</div>
-        <p>Comparativo entre Arduino, ESP32, STM32 e PIC: consumo, GPIO, WiFi, preço e aplicações reais.</p>
-        <a href="#" class="read-more">Ler artigo →</a>
-      </div>
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="searchInput" class="search-box" placeholder="Buscar artigos...">
+    </div>
 
-      <div class="article">
-        <h3>Entendendo MOSFETs: Do Básico ao Avançado</h3>
-        <div class="meta">Por Ana Costa • 25 Out 2025 • 15 min de leitura</div>
-        <p>Curva característica, driver de gate, perdas por comutação e uso em fontes chaveadas.</p>
-        <a href="#" class="read-more">Ler artigo →</a>
-      </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <button class="filter-btn" data-filter="transceptor">Transceptores</button>
+      <button class="filter-btn" data-filter="antena">Antenas</button>
+      <button class="filter-btn" data-filter="fonte">Fontes</button>
+      <button class="filter-btn" data-filter="sdr">SDR</button>
+      <button class="filter-btn" data-filter="instrumentacao">Instrumentação</button>
+    </div>
 
-      <div class="article">
-        <h3>Construindo um Osciloscópio com Arduino e TFT</h3>
-        <div class="meta">Por Pedro Lima • 20 Out 2025 • 8 min de leitura</div>
-        <p>Projeto completo com código, esquema e calibração de 100kHz de largura de banda.</p>
-        <a href="#" class="read-more">Ler artigo →</a>
-      </div>
+    <section class="article-list" id="articleList">
+      <!-- 6 ARTIGOS -->
+      <article class="article" data-category="transceptor">
+        <img src="https://via.placeholder.com/800x400/007bff/ffffff?text=Ararinha+4B+2010" alt="Ararinha 4B 2010" class="article-img">
+        <div class="article-content">
+          <h3>Montagem do Transceptor Ararinha 4B 2010</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 12 min</span>
+          </div>
+          <p>Experiência completa de montagem do transceptor 40m.</p>
+          <a href="ararinha-4b-2010.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+
+      <article class="article" data-category="transceptor">
+        <img src="https://via.placeholder.com/800x400/28a745/ffffff?text=Ararinha+4B+2013" alt="Ararinha 4B 2013" class="article-img">
+        <div class="article-content">
+          <h3>Montagem do Transceptor Ararinha 4B 2013</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 15 min</span>
+          </div>
+          <p>Versão 80m com melhorias de áudio e potência.</p>
+          <a href="ararinha-4b-2013.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+
+      <article class="article" data-category="antena">
+        <img src="https://via.placeholder.com/800x400/ff6b6b/ffffff?text=Antena+5+Elementos" alt="Antena 5 elementos" class="article-img">
+        <div class="article-content">
+          <h3>Antena Direcional 5 Elementos 27MHz CB</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 8 min</span>
+          </div>
+          <p>Projeto Yagi com simulação xnec2c.</p>
+          <a href="antena-5-elementos-27mhz.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+
+      <article class="article" data-category="fonte">
+        <img src="https://via.placeholder.com/800x400/ff8c00/ffffff?text=Fonte+13.8V+30A" alt="Fonte 13.8V 30A" class="article-img">
+        <div class="article-content">
+          <h3>Construção de uma Fonte de Alimentação 13.8V 30A</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 10 min</span>
+          </div>
+          <p>Fonte linear com proteção total e ventilação.</p>
+          <a href="fonte-13.8v-30a.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+
+      <article class="article" data-category="sdr">
+        <img src="https://via.placeholder.com/800x400/9c27b0/ffffff?text=SDR+RTL-SDR" alt="Receptor SDR" class="article-img">
+        <div class="article-content">
+          <h3>Receptor SDR com RTL-SDR e Raspberry Pi</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 14 min</span>
+          </div>
+          <p>GQRX, LNA e acesso remoto via Wi-Fi.</p>
+          <a href="receptor-sdr-rtl.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+
+      <article class="article" data-category="instrumentacao">
+        <img src="https://via.placeholder.com/800x400/dc3545/ffffff?text=Medidor+ROE" alt="Medidor ROE" class="article-img">
+        <div class="article-content">
+          <h3>Medidor de ROE Digital com Arduino Nano</h3>
+          <div class="meta">
+            <span><i class="fas fa-user"></i> Gerson PU5GEK</span>
+            <span><i class="fas fa-calendar"></i> 30 Out 2025</span>
+            <span><i class="fas fa-clock"></i> 9 min</span>
+          </div>
+          <p>Display OLED e código completo.</p>
+          <a href="medidor-roe-arduino.html" class="read-more">Ler artigo</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="pagination">
+      <button class="page-btn active">1</button>
     </div>
 
     <footer>
       <p>© 2025 EletroTec • Conteúdo técnico revisado por especialistas.</p>
     </footer>
   </div>
+
+  <script>
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+
+    const searchInput = document.getElementById('searchInput');
+    const articles = document.querySelectorAll('.article');
+    searchInput.addEventListener('input', () => {
+      const term = searchInput.value.toLowerCase();
+      articles.forEach(a => a.style.display = a.textContent.toLowerCase().includes(term) ? 'flex' : 'none');
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        articles.forEach(a => {
+          const cat = a.dataset.category;
+          a.style.display = (filter === 'all' || cat === filter) ? 'flex' : 'none';
+        });
+      });
+    });
+  </script>
 </body>
 </html>
