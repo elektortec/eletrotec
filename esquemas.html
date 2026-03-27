@@ -1,143 +1,66 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Esquemas - EletroTec</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8f9fa;
-      --text: #212529;
-      --primary: #007bff;
-      --card-bg: #ffffff;
-      --border: #dee2e6;
-      --code-bg: #f1f3f5;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 2rem 1rem;
-    }
-    .container { max-width: 900px; margin: 0 auto; }
-    header h1 {
-      font-size: 2.2rem;
-      color: var(--primary);
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .back {
-      display: inline-block;
-      margin-bottom: 2rem;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .back:hover { text-decoration: underline; }
-    .section { margin-bottom: 3rem; }
-    .section h2 {
-      font-size: 1.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #e9ecef;
-      padding-bottom: 0.5rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
-    }
-    .item {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .item h3 { font-size: 1.2rem; margin: 0.8rem 0; color: var(--primary); }
-    .item p { font-size: 0.9rem; color: #555; }
-    .placeholder {
-      background: #e9ecef;
-      height: 160px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #888;
-      font-style: italic;
-    }
-    pre {
-      background: var(--code-bg);
-      padding: 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      font-size: 0.9rem;
-      margin: 1rem 0;
-    }
-    footer {
-      text-align: center;
-      margin-top: 4rem;
-      color: #888;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 600px) {
-      header h1 { font-size: 1.8rem; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <a href="index.html" class="back">← Voltar à Home</a>
-    <header>
-      <h1>Esquemas Elétricos</h1>
-      <p>Projetos práticos com diagramas, componentes e instruções passo a passo.</p>
-    </header>
-
-    <div class="section">
-      <h2>Projetos em Destaque</h2>
-      <div class="grid">
-        <div class="item">
-          <div class="placeholder">📋 Diagrama</div>
-          <h3>Fonte Ajustável 0-30V</h3>
-          <p>Baseada no LM317 com proteção contra curto.</p>
-        </div>
-        <div class="item">
-          <div class="placeholder">🔋 Circuito</div>
-          <h3>Carregador de Bateria com TP4056</h3>
-          <p>Proteção, LED de status e corte automático.</p>
-        </div>
-        <div class="item">
-          <div class="placeholder">🎛️ PCB</div>
-          <h3>Amplificador com TDA2030</h3>
-          <p>Estéreo 2x14W com filtro de ruído.</p>
-        </div>
-      </div>
+<div class="section">
+  <h2>Visão Geral do Projeto</h2>
+  <div class="grid">
+    <div class="item">
+      <div class="placeholder">📋 Bloco Funcional</div>
+      <h3>Descrição</h3>
+      <p>Oscilador de referência (≈240 Hz) gerado com CD40106 (inversores Schmitt). Saída alimenta um CD4017 que alterna duas saídas para conduzir drivers MOSFET em configuração push-pull sobre o transformador 12V→220V.</p>
     </div>
-
-    <div class="section">
-      <h2>Exemplo de Código (Arduino)</h2>
-      <pre>
-// Controle de LED com PWM
-int led = 9;
-void setup() {
-  pinMode(led, OUTPUT);
-}
-void loop() {
-  for(int i = 0; i <= 255; i++) {
-    analogWrite(led, i);
-    delay(10);
-  }
-}</pre>
-      <p>Use este código com o esquema de dimmer PWM.</p>
+    <div class="item">
+      <div class="placeholder">⚙️ Aplicação</div>
+      <h3>Uso</h3>
+      <p>Pequena carga resistiva ou iluminação; não recomendado para cargas sensíveis sem filtragem e regulação adicionais.</p>
     </div>
-
-    <footer>
-      <p>© 2025 EletroTec • Todos os esquemas são de domínio público ou com licença aberta.</p>
-    </footer>
+    <div class="item">
+      <div class="placeholder">🔒 Segurança</div>
+      <h3>Atenção</h3>
+      <p class="warn">Perigo de choque e incêndio. Trabalhe com isolamento, fusíveis e em baixa potência para testes.</p>
+    </div>
   </div>
-</body>
-</html>
+</div>
+
+<div class="section">
+  <h2>Lista de Componentes</h2>
+  <div class="item">
+    <ul>
+      <li><strong>IC1:</strong> CD40106 (inversor Schmitt) — oscilador ~240 Hz (use 2 estágios em cascata para estabilidade)</li>
+      <li><strong>IC2:</strong> CD4017 (decade counter) — divide/seleciona saídas 1 e 6 para alternância</li>
+      <li><strong>MOSFETs:</strong> 2x N-channel logic-level (ex.: IRLZ44N ou equivalente de baixa Rds(on))</li>
+      <li><strong>Transformador:</strong> 12V CT para 220V (primário 12-0-12, secundário 220V) — ou transformador com primário adequado para push-pull</li>
+      <li><strong>Resistores:</strong> 10k pull-downs, 100Ω gate resistors</li>
+      <li><strong>Capacitores:</strong> 10nF–100nF para o oscilador; capacitores de desacoplamento 0.1µF</li>
+      <li><strong>Fusível:</strong> 10A (ajuste conforme projeto)</li>
+      <li><strong>Fonte:</strong> Bateria 12V (capacidade conforme corrente esperada)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Conexões e Diagrama (descrito)</h2>
+  <div class="item notes">
+    <p><strong>Oscilador (CD40106)</strong></p>
+    <ul>
+      <li>Use um estágio do CD40106 como oscilador RC: entrada do inversor em resistor série (p.ex. 100k) e capacitor para GND (p.ex. 10nF–47nF). Ajuste para ~240 Hz.</li>
+      <li>Se necessário, encascadeie dois estágios para formas de onda mais quadradas e maior amplitude de saída.</li>
+    </ul>
+
+    <p style="margin-top:0.75rem"><strong>Contador/Divisor (CD4017)</strong></p>
+    <ul>
+      <li>Saída do oscilador vai ao clock do CD4017 (pin CLK).</li>
+      <li>Configure CD4017 para alternar entre duas saídas usadas para conduzir os gates dos MOSFETs: por exemplo, usar Q0 e Q5 (saídas 1 e 6) para obter meia-período alternado; prenda as demais saídas a GND via pull-down se necessário.</li>
+      <li>Conecte RESET do CD4017 a GND para contagem contínua; use ENABLE (se aplicável) conforme datasheet.</li>
+    </ul>
+
+    <p style="margin-top:0.75rem"><strong>Drivers e Estágio de Potência</strong></p>
+    <ul>
+      <li>Use resistores de gate (100Ω) entre saídas do CD4017 e gates dos MOSFETs.</li>
+      <li>Coloque pull-downs (10k) dos gates para GND para evitar condução indesejada.</li>
+      <li>Fonte 12V alimenta os drains dos MOSFETs (configuração push-pull): os MOSFETs alternam a ligação das extremidades do primário do transformador ao +12V, criando alternância na secundária em alta tensão.</li>
+      <li>Adicione diodos de flyback se o transformador e o layout exigirem supressão transiente.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Esquema ASCII (referência rápida)</h2>
+  <pre>
